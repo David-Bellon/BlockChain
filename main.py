@@ -1,4 +1,5 @@
 from hashlib import sha256
+from random import randint
 import time
 import json
 
@@ -18,7 +19,7 @@ class Block:
 
 class BlockChain():
 
-    difficulty = 2
+    difficulty = 5
 
     def __init__(self):
 
@@ -29,6 +30,7 @@ class BlockChain():
     def create_genesis(self):
         genesis_block = Block(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
+        genesis_block.mineDate = time.time()
         self.chain.append(genesis_block)
 
     def last_block(self):
@@ -40,7 +42,7 @@ class BlockChain():
 
         computed_hash = block.compute_hash()
         while not computed_hash.startswith("0" * self.difficulty):
-            block.nonce += 1
+            block.nonce += randint(1, 34566)
             computed_hash = block.compute_hash()
         return computed_hash
     
@@ -55,6 +57,7 @@ class BlockChain():
             return False
 
         block.hash = proof
+        block.mineDate = time.time()
         self.chain.append(block)
         return True
 
@@ -77,3 +80,9 @@ class BlockChain():
         self.add_block(new_block, proof)
         self.unconfirmed_transactions = []
         return new_block.index
+
+
+blockchain = BlockChain()
+blockchain.add_new_transaction("Pepe envia pasta a Maria")
+blockchain.mine()
+None
