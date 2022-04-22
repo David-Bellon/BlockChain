@@ -19,7 +19,7 @@ class Block:
 
 class BlockChain():
 
-    difficulty = 5
+    difficulty = 2
 
     def __init__(self):
 
@@ -83,6 +83,8 @@ class BlockChain():
 
 
 blockchain = BlockChain()
-blockchain.add_new_transaction("Pepe envia pasta a Maria")
-blockchain.mine()
 None
+for i in range(10):
+    blockchain.add_new_transaction("Cosa " + str(i))
+    blockchain.mine()
+    print("minado")
