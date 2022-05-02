@@ -4,6 +4,23 @@ import time
 import json
 
 
+class User():
+        id = 0
+        def __init__(self, adress):
+            self.count = User.id
+            self.adress = adress
+            self.voted = False
+            User.id +=1
+
+
+
+class EventUserCreated():
+    def __init__(self, adress):
+        self.date = time.time()
+        self.blockNumber = blockchain.last_block().index + 1
+        self.adress = adress
+        self.notes = "Adress Created"
+
 class Block:
     def __init__(self, index, transactions, timestamp, previous_hash):
 
@@ -13,14 +30,16 @@ class Block:
         self.previous_hash = previous_hash
     
     def compute_hash(self):
-        block_string = json.dumps(self.__dict__, sort_keys=True)
+        block_string = json.dumps(self.__dict__, sort_keys=True, default=vars)
         return sha256(block_string.encode()).hexdigest()
 
 
-class BlockChain():
+class __BlockChain():
+    difficulty = 3
+    users = []
+    votos = {
 
-    difficulty = 2
-
+    }
     def __init__(self):
 
         self.unconfirmed_transactions = []
@@ -36,6 +55,11 @@ class BlockChain():
     def last_block(self):
         return self.chain[-1]
 
+
+    def add_user(self, user):
+        self.users.append(user)
+        #create a transaction to store the user created
+        self.add_new_transaction(EventUserCreated(user.adress))
 
     def proof_of_work(self, block):
         block.nonce = 0
@@ -79,12 +103,7 @@ class BlockChain():
         proof = self.proof_of_work(new_block)
         self.add_block(new_block, proof)
         self.unconfirmed_transactions = []
+        print("Block Mined")
         return new_block.index
 
-
-blockchain = BlockChain()
-None
-for i in range(10):
-    blockchain.add_new_transaction("Cosa " + str(i))
-    blockchain.mine()
-    print("minado")
+blockchain = __BlockChain()
