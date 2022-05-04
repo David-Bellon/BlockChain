@@ -1,5 +1,7 @@
 from hashlib import sha256
 from time import sleep
+import tkinter
+
 from main import blockchain, User
 from win32api import GetSystemMetrics
 from tkinter import *
@@ -17,6 +19,11 @@ def blockChainActions():
     master.geometry(resolution)
 
 
+    canvas = Canvas(master, width= 300, height= 50, bg="gray")
+    canvas.place(x = width - 300, y = height * 0.0001)
+    
+    
+    
 
 
 
