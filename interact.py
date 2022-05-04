@@ -7,6 +7,24 @@ from settings import *
 
 import threading
 
+
+
+def blockChainActions():
+    master = Tk()
+    width = int(GetSystemMetrics(0) * 0.7)
+    height = int(GetSystemMetrics(1) * 0.7)
+    resolution = str(width) + "x" + str(height)
+    master.geometry(resolution)
+
+
+
+
+
+
+
+    master.mainloop()
+
+
 def main():
 
     def SignUp():
@@ -24,6 +42,39 @@ def main():
             l = Label(w, text="Password must be more than 6 characters and not empty", bg="gray", fg="white")
             l.place(x= width / 1.57, y= height / 1.6)
             l.after(1000, l.destroy)
+
+        if w.state == "normal":
+            paswd_sig.delete(0, END)
+
+    def LogIn():
+
+        if paswd_log.get() != "":
+            url = os.path.join(ROOT, "info.txt")
+            if os.path.isfile(url):
+                if verifyPassword(paswd_log.get()):
+                    p = Label(w, text="Access Guranted")
+                    p.place(x=width /2, y = width / 2)
+                    w.destroy()
+                    #Abrir otra ventana y acceso a la blockchain
+                    blockChainActions()
+                else:
+                    b = Label(w, text="Wrong Password")
+                    b.place(x=width /2, y = width / 2)
+                    b.after(1300, b.destroy)
+            else:
+                a = Label(w, text="You are not register in the blockchain please do it", bg="gray", fg="white")
+                a.place(x= width / 5.33, y= height / 1.5)
+                a.after(1400, a.destroy)
+
+        else:
+            l = Label(w, text="Enter a valid password", bg="gray", fg="white")
+            l.place(x= width / 4.3, y= height / 1.3)
+            l.after(1000, l.destroy)
+
+        if w.state == "normal":
+            paswd_log.delete(0, END)
+        
+            
 
     w =Tk("Buenas tardes")
     width = int(GetSystemMetrics(0) * 0.7)
@@ -52,18 +103,18 @@ def main():
 
     Label(w, text="Password", font=("Helvetica", 16),bg="gray").place(x= width/4.1, y= height / 2.8)
 
-    paswd_log = Entry(w, width=20, bd=3)
+    paswd_log = Entry(w, width=20, bd=3, show="*")
     paswd_log.place(x = width / 4.3, y = height / 2.2)
 
     #Text and boxes for Sign Up
 
     Label(w, text="Password", font=("Helvetica", 16),bg="gray").place(x= width/1.38, y= height / 2.8)
-    paswd_sig = Entry(w, width=20, bd=3)
+    paswd_sig = Entry(w, width=20, bd=3, show="*")
     paswd_sig.place(x = width / 1.4, y = height / 2.2)
 
 
     #Buttons to trigger functions
-    Button(w, text="Log In").place(x = width / 3.8, y= height / 1.8)
+    Button(w, text="Log In", command=LogIn).place(x = width / 3.8, y= height / 1.8)
 
     Button(w, text="Sign Up", command=SignUp).place(x = width / 1.34, y= height / 1.8)
 
@@ -77,6 +128,10 @@ def alwaysMine():
         if len(blockchain.chain) - 1 == 1:
             break
 
+
+main()
+
+'''
 x = threading.Thread(target= main)
 y = threading.Thread(target=alwaysMine)
 x.start()
@@ -86,3 +141,4 @@ x.join()
 y.join()
 
 print(blockchain)
+'''
