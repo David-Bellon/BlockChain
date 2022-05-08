@@ -2,6 +2,7 @@ from hashlib import sha256
 from random import randint
 import time
 import json
+import socket
 
 
 class User():
@@ -37,9 +38,11 @@ class Block:
 class __BlockChain():
     difficulty = 3
     users = []
-    votos = {
+    
+    nodes = {
 
     }
+
     def __init__(self):
 
         self.unconfirmed_transactions = []
@@ -54,6 +57,9 @@ class __BlockChain():
 
     def last_block(self):
         return self.chain[-1]
+
+    def add_node(self, adress, ip):
+        self.nodes[adress] = ip
 
 
     def add_user(self, user):

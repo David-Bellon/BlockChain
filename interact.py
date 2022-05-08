@@ -4,6 +4,7 @@ from main import blockchain, User
 from win32api import GetSystemMetrics
 from tkinter import *
 from settings import *
+import socket
 
 import threading
 
@@ -15,9 +16,6 @@ def blockChainActions():
     height = int(GetSystemMetrics(1) * 0.7)
     resolution = str(width) + "x" + str(height)
     master.geometry(resolution)
-
-
-
 
 
 
@@ -38,6 +36,8 @@ def main():
             else:
                 secret = generateAdress(User.id, paswd_sig.get())
                 blockchain.add_user(User(secret))
+                ip = get_ip()
+                blockchain.add_node(secret, ip)
         else:
             l = Label(w, text="Password must be more than 6 characters and not empty", bg="gray", fg="white")
             l.place(x= width / 1.57, y= height / 1.6)
@@ -128,6 +128,12 @@ def alwaysMine():
         if len(blockchain.chain) - 1 == 1:
             break
 
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
+    local_ip_address = s.getsockname()[0]
+    return local_ip_address
 
 main()
 
