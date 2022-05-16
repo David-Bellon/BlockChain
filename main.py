@@ -1,9 +1,15 @@
 from hashlib import sha256
 from random import randint
+from settings import get_ip, ROOT
+from listen import send_blockchain_info
+import os
+import pandas as pd
 import time
 import json
-import socket
+import threading
 
+
+sem = threading.Semaphore()
 
 class User():
         id = 0
@@ -13,14 +19,6 @@ class User():
             self.voted = False
             User.id +=1
 
-
-
-class EventUserCreated():
-    def __init__(self, adress):
-        self.date = time.time()
-        self.blockNumber = blockchain.last_block().index + 1
-        self.adress = adress
-        self.notes = "Adress Created"
 
 class Block:
     def __init__(self, index, transactions, timestamp, previous_hash):
@@ -35,7 +33,16 @@ class Block:
         return sha256(block_string.encode()).hexdigest()
 
 
-class __BlockChain():
+class BlockChain():
+
+    class EventUserCreated():
+        def __init__(self, adress):
+            self.date = time.time()
+            self.blockNumber = self.blockchain.last_block().index + 1
+            self.adress = adress
+            self.notes = "Adress Created"
+
+
     difficulty = 3
     users = []
     
@@ -53,6 +60,7 @@ class __BlockChain():
         genesis_block = Block(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         genesis_block.mineDate = time.time()
+        self.add_node("0x0", get_ip())
         self.chain.append(genesis_block)
 
     def last_block(self):
@@ -60,12 +68,21 @@ class __BlockChain():
 
     def add_node(self, adress, ip):
         self.nodes[adress] = ip
-
+        url = os.path.join(ROOT, "ip_nodes.csv")
+        if os.path.isfile(url):
+            df = pd.read_csv(url)
+            df.append(ip)
+        else:
+            df = pd.DataFrame({"ip_nodes": [ip]})
+            df.to_csv(url, index=False)
 
     def add_user(self, user):
-        self.users.append(user)
         #create a transaction to store the user created
-        self.add_new_transaction(EventUserCreated(user.adress))
+        self.add_new_transaction(self.EventUserCreated(user.adress))
+
+        sem.acquire()
+        self.users.append(user)
+        sem.release()
 
     def proof_of_work(self, block):
         block.nonce = 0
@@ -99,6 +116,7 @@ class __BlockChain():
         self.unconfirmed_transactions.append(transaction)
 
     def mine(self):
+        sem.acquire()
 
         if not self.unconfirmed_transactions:
             return False
@@ -110,6 +128,13 @@ class __BlockChain():
         self.add_block(new_block, proof)
         self.unconfirmed_transactions = []
         print("Block Mined")
+        sem.release()
         return new_block.index
 
-blockchain = __BlockChain()
+
+def deploy():
+    blockchain = BlockChain()
+    while True:
+        send_blockchain_info(blockchain, User)
+
+deploy()

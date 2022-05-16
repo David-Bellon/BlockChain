@@ -1,10 +1,15 @@
 from hashlib import sha256
+from xml.etree.ElementInclude import FatalIncludeError
+
+import pandas as pd
 import os
 import requests
 import random
+import socket
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-
+PORT = 5647
+A = "f077da9fe55fee31284d9a09456c3652991e37e1babc53deb92546a477f856cf"
 
 def verifyPassword(password):
     url = os.path.join(ROOT, "info.txt")
@@ -41,3 +46,16 @@ def generateAdress(id, paswd):
     f.close()
 
     return secret
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
+    local_ip_address = s.getsockname()[0]
+    return local_ip_address
+
+def get_all_nodes():
+    try:
+        df = pd.read_csv("Blockchain\ip_nodes.csv")
+        return list(df["ips"])
+    except:
+        return False

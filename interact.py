@@ -1,8 +1,7 @@
 from hashlib import sha256
 from time import sleep
-import tkinter
-
-from main import blockchain, User
+from listen import send_blockchain_info
+from sender import request_info_nodes
 from win32api import GetSystemMetrics
 from tkinter import *
 from settings import *
@@ -23,11 +22,9 @@ def blockChainActions():
     canvas = Canvas(master, width= 300, height= 50, bg="gray")
     canvas.place(x = width - 300, y = height * 0.0001)
     
-    None
+    server = threading.Thread(target=send_blockchain_info, args=(blockchain, users))
+    server.start()
     
-    
-
-
     master.mainloop()
 
 
@@ -42,8 +39,8 @@ def main():
                 a.place(x= width / 1.44, y= height / 1.4)
                 a.after(1000, a.destroy)
             else:
-                secret = generateAdress(User.id, paswd_sig.get())
-                blockchain.add_user(User(secret))
+                secret = generateAdress(users.id, paswd_sig.get())
+                blockchain.add_user(users(secret))
                 ip = get_ip()
                 blockchain.add_node(secret, ip)
         else:
@@ -136,12 +133,10 @@ def alwaysMine():
         if len(blockchain.chain) - 1 == 1:
             break
 
+data = request_info_nodes()
 
-def get_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
-    local_ip_address = s.getsockname()[0]
-    return local_ip_address
+blockchain = data[0]
+users = data[1]
 
 main()
 
