@@ -1,7 +1,6 @@
 from hashlib import sha256
 from random import randint
 from settings import get_ip, ROOT
-from send_info import send_blockchain_info
 import os
 import pandas as pd
 import time
@@ -11,6 +10,14 @@ import threading
 
 sem = threading.Semaphore()
 
+
+class User():
+    id = 0
+    def __init__(self, adress):
+        self.count = User.id
+        self.adress = adress
+        self.voted = False
+        User.id +=1
 
 
 
@@ -132,11 +139,3 @@ class BlockChain():
         print("Block Mined")
         sem.release()
         return new_block.index
-
-
-def deploy():
-    blockchain = BlockChain()
-    while True:
-        send_blockchain_info(blockchain)
-
-deploy()
