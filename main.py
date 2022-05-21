@@ -1,7 +1,7 @@
 from hashlib import sha256
 from random import randint
 from settings import get_ip, ROOT
-from listen import send_blockchain_info
+from send_info import send_blockchain_info
 import os
 import pandas as pd
 import time
@@ -11,13 +11,7 @@ import threading
 
 sem = threading.Semaphore()
 
-class User():
-        id = 0
-        def __init__(self, adress):
-            self.count = User.id
-            self.adress = adress
-            self.voted = False
-            User.id +=1
+
 
 
 class Block:
@@ -41,6 +35,14 @@ class BlockChain():
             self.blockNumber = self.blockchain.last_block().index + 1
             self.adress = adress
             self.notes = "Adress Created"
+
+    class User():
+        id = 0
+        def __init__(self, adress):
+            self.count = self.User.id
+            self.adress = adress
+            self.voted = False
+            self.User.id +=1
 
 
     difficulty = 3
@@ -71,7 +73,7 @@ class BlockChain():
         url = os.path.join(ROOT, "ip_nodes.csv")
         if os.path.isfile(url):
             df = pd.read_csv(url)
-            df.append(ip)
+            df.append([ip])
         else:
             df = pd.DataFrame({"ip_nodes": [ip]})
             df.to_csv(url, index=False)
@@ -135,6 +137,6 @@ class BlockChain():
 def deploy():
     blockchain = BlockChain()
     while True:
-        send_blockchain_info(blockchain, User)
+        send_blockchain_info(blockchain)
 
 deploy()

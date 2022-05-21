@@ -1,15 +1,19 @@
 from hashlib import sha256
 from time import sleep
-from listen import send_blockchain_info
-from sender import request_info_nodes
+from send_info import send_blockchain_info
+from recieve_info import request_info_nodes
 from win32api import GetSystemMetrics
 from tkinter import *
 from settings import *
-import socket
 
 import threading
 
-
+class User():
+    pass
+class BlockChain():
+    pass
+class Block():
+    pass
 
 def blockChainActions():
     master = Tk()
@@ -135,10 +139,12 @@ def alwaysMine():
 
 data = request_info_nodes()
 
-blockchain = data[0]
-users = data[1]
-
-main()
+if data != False:
+    blockchain = data[0]
+    users = data[1]
+    main()
+else:
+    print("Impossible to get acces to blockchain info")
 
 '''
 x = threading.Thread(target= main)
