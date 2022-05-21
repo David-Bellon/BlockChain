@@ -39,17 +39,12 @@ class BlockChain():
     class EventUserCreated():
         def __init__(self, adress):
             self.date = time.time()
-            self.blockNumber = self.blockchain.last_block().index + 1
+            self.blockNumber = self.BlockChain.last_block().index + 1
             self.adress = adress
             self.notes = "Adress Created"
 
-
     difficulty = 3
-    users = []
     
-    nodes = {
-
-    }
 
     def __init__(self):
 
@@ -57,7 +52,13 @@ class BlockChain():
         self.chain = []
         self.create_genesis()
 
+    
+
     def create_genesis(self):
+        self.nodes = {
+
+        }
+        self.users = []
         genesis_block = Block(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         genesis_block.mineDate = time.time()

@@ -13,14 +13,16 @@ def request_info_nodes():
             try:
                 s.connect((i, PORT))
                 s.send(A.encode())
+
                 recieved_b = s.recv(4096)
                 blockchain_data = pickle.loads(recieved_b)
 
                 recieved_u = s.recv(4096)
+                user_data = pickle.loads(recieved_u)
 
 
                 if recieved_b != "" and recieved_u != "":
-                    return blockchain_data, recieved_u
+                    return blockchain_data, user_data
             except:
                 print("Can't connect to node ", str(i))
 

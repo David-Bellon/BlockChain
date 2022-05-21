@@ -20,7 +20,6 @@ class User():
         User.id +=1
 
 
-
 class Block:
     def __init__(self, index, transactions, timestamp, previous_hash):
 
@@ -42,15 +41,6 @@ class BlockChain():
             self.blockNumber = self.blockchain.last_block().index + 1
             self.adress = adress
             self.notes = "Adress Created"
-
-    class User():
-        id = 0
-        def __init__(self, adress):
-            self.count = self.User.id
-            self.adress = adress
-            self.voted = False
-            self.User.id +=1
-
 
     difficulty = 3
     users = []

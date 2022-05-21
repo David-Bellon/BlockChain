@@ -5,15 +5,11 @@ from recieve_info import request_info_nodes
 from win32api import GetSystemMetrics
 from tkinter import *
 from settings import *
+from to_use import *
 
 import threading
 
-class User():
-    pass
-class BlockChain():
-    pass
-class Block():
-    pass
+
 
 def blockChainActions():
     master = Tk()
