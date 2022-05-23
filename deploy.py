@@ -1,7 +1,7 @@
 from hashlib import sha256
 from random import randint
 from settings import get_ip, ROOT
-from listen import listen_to_transactions
+from listen import listen_to_request_info
 import os
 import pandas as pd
 import time
@@ -157,6 +157,6 @@ def deploy():
     blockchain = BlockChain()
     print("Succesfully deploy")
     while True:
-        listen_to_transactions(blockchain, User)
+        listen_to_request_info(blockchain, User)
 
 deploy()
