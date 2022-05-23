@@ -74,7 +74,7 @@ class BlockChain():
     def last_block(self):
         return self.chain[-1]
 
-    def add_node_transactin(self, adress, ip):
+    def add_node_transaction(self, adress, ip):
         self.add_new_transaction(self.EventNodeCreated(adress, ip))
 
     def add_node(self, adress, ip):
