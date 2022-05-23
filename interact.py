@@ -1,4 +1,4 @@
-from BlockChain.comunicate import alert_new_transaction
+from comunicate import alert_new_transaction
 from listen import listen_to_request_info
 from comunicate import request_info_nodes
 from win32api import GetSystemMetrics
