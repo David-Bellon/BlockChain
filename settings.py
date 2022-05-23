@@ -8,8 +8,12 @@ import random
 import socket
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-PORT = 5647
+PORT_1 = 5647
+PORT_2 = 5648
+
 A = "f077da9fe55fee31284d9a09456c3652991e37e1babc53deb92546a477f856cf"
+B = "66912966cd4e07b9a1b1ce551b66e9ca4449d54f17ab703023eb6d9723501554"
+C = "f54c05823757695c0b4fa9154f2ee331a21ea7f538bef46f8c7ce83055c522ad"
 
 def verifyPassword(password):
     url = os.path.join(ROOT, "info.txt")

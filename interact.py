@@ -1,5 +1,5 @@
 from listen import send_blockchain_info
-from recieve_info import request_info_nodes
+from comunicate import request_info_nodes
 from win32api import GetSystemMetrics
 from tkinter import *
 from settings import *
