@@ -38,9 +38,9 @@ def main():
                 a.after(1000, a.destroy)
             else:
                 secret = generateAdress(users.id, paswd_sig.get())
-                blockchain.add_user(users(secret))
+                blockchain.add_user_transaction(users(secret))
                 ip = get_ip()
-                blockchain.add_node(secret, ip)
+                blockchain.add_node_transaction(secret, ip)
         else:
             l = Label(w, text="Password must be more than 6 characters and not empty", bg="gray", fg="white")
             l.place(x= width / 1.57, y= height / 1.6)
