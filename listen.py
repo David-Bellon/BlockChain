@@ -21,14 +21,14 @@ def listen_to_request_info(blockchain, user):
             time.sleep(1)
             data = pickle.dumps(user)
             c.send(data)
-            
+
         else:
             c.send("none")
         c.close()
 
 
 
-def listen_to_new_info():
+def listen_to_new_info(blockchain, user):
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -49,9 +49,12 @@ def listen_to_new_info():
 
             recieved_u = s.recv(4096)
             user_data = pickle.loads(recieved_u)
+            print("Recieved new Transactions")
 
-            if recieved_b != "" and recieved_u != "":
-                return blockchain_data, user_data
+            blockchain = blockchain_data
+            user = user_data
+
+            print("Blockchain Updated")
         else:
             c.send("none")
         c.close()

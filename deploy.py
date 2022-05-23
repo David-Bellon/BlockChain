@@ -1,7 +1,7 @@
 from hashlib import sha256
 from random import randint
 from settings import get_ip, ROOT
-from listen import listen_to_request_info
+from listen import listen_to_request_info, listen_to_new_info
 import os
 import pandas as pd
 import time
@@ -156,7 +156,9 @@ class BlockChain():
 def deploy():
     blockchain = BlockChain()
     print("Succesfully deploy")
-    while True:
-        listen_to_request_info(blockchain, User)
+    x = threading.Thread(target=listen_to_request_info, args=(blockchain, User))
+    y = threading.Thread(target=listen_to_new_info, args=(blockchain, User))
+    x.start()
+    y.start()
 
 deploy()
