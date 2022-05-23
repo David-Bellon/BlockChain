@@ -31,9 +31,3 @@ def request_info_nodes():
     else:
         print("Imposible to connect with nodes")
         return False
-    
-
-
-
-        
-
