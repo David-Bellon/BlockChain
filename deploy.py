@@ -42,6 +42,14 @@ class BlockChain():
             self.adress = adress
             self.notes = "Adress Created"
 
+    class EventNodeCreated():
+        def __init__(self, adress, ip) -> None:
+            self.adress = adress
+            self.ip = ip
+
+    class EventVote():
+        pass
+
     difficulty = 3
     
 
@@ -66,6 +74,9 @@ class BlockChain():
     def last_block(self):
         return self.chain[-1]
 
+    def add_node_transactin(self, adress, ip):
+        self.add_new_transaction(self.EventNodeCreated(adress, ip))
+
     def add_node(self, adress, ip):
         self.nodes[adress] = ip
         url = os.path.join(ROOT, "ip_nodes.csv")
@@ -76,10 +87,11 @@ class BlockChain():
             df = pd.DataFrame({"ip_nodes": [ip]})
             df.to_csv(url, index=False)
 
-    def add_user(self, user):
-        #create a transaction to store the user created
+
+    def add_user_transaction(self, user):
         self.add_new_transaction(self.EventUserCreated(user.adress))
 
+    def add_user(self, user):
         sem.acquire()
         self.users.append(user)
         sem.release()
@@ -126,11 +138,20 @@ class BlockChain():
         new_block = Block(index=last_block.index + 1, transactions=self.unconfirmed_transactions, timestamp=time.time(), previous_hash=last_block.hash)
         proof = self.proof_of_work(new_block)
         self.add_block(new_block, proof)
+        self.compute_transactions(new_block.transactions)
         self.unconfirmed_transactions = []
         print("Block Mined")
         sem.release()
         return new_block.index
 
+    def compute_transactions(self, transactions):
+        for i in transactions:
+            if i == self.EventUserCreated:
+                self.add_user(i.adress)
+            elif i == self.EventNodeCreated:
+                self.add_node(i.adress, i.ip)
+            else:
+                return False
 
 def deploy():
     blockchain = BlockChain()
