@@ -39,7 +39,7 @@ class BlockChain():
     class EventUserCreated():
         def __init__(self, adress):
             self.date = time.time()
-            self.blockNumber = self.BlockChain.last_block().index + 1
+            self.blockNumber = self.super().last_block().index + 1
             self.adress = adress
             self.notes = "Adress Created"
 
