@@ -1,7 +1,7 @@
 from hashlib import sha256
 from random import randint
 from settings import get_ip, ROOT
-from send_info import send_blockchain_info
+from listen import send_blockchain_info
 import os
 import pandas as pd
 import time
@@ -11,14 +11,13 @@ import threading
 
 sem = threading.Semaphore()
 
-
 class User():
-    id = 0
-    def __init__(self, adress):
-        self.count = User.id
-        self.adress = adress
-        self.voted = False
-        User.id +=1
+        id = 0
+        def __init__(self, adress):
+            self.count = User.id
+            self.adress = adress
+            self.voted = False
+            User.id +=1
 
 
 class Block:
@@ -39,25 +38,24 @@ class BlockChain():
     class EventUserCreated():
         def __init__(self, adress):
             self.date = time.time()
-            self.blockNumber = self.BlockChain.last_block().index + 1
+            self.blockNumber = self.blockchain.last_block().index + 1
             self.adress = adress
             self.notes = "Adress Created"
 
     difficulty = 3
     
 
+    
     def __init__(self):
 
         self.unconfirmed_transactions = []
         self.chain = []
         self.create_genesis()
-
+        
     
-
     def create_genesis(self):
         self.nodes = {
-
-        }
+            }
         self.users = []
         genesis_block = Block(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
@@ -136,7 +134,8 @@ class BlockChain():
 
 def deploy():
     blockchain = BlockChain()
+    print("Succesfully deploy")
     while True:
-        send_blockchain_info(blockchain)
+        send_blockchain_info(blockchain, User)
 
 deploy()

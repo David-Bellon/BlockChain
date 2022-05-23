@@ -56,6 +56,6 @@ def get_ip():
 def get_all_nodes():
     try:
         df = pd.read_csv("Blockchain\ip_nodes.csv")
-        return list(df["ip_nodes"])
+        return list(df["ips"])
     except:
         return False

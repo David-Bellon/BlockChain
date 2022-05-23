@@ -1,6 +1,6 @@
 from hashlib import sha256
 from time import sleep
-from send_info import send_blockchain_info
+from BlockChain.listen import send_blockchain_info
 from recieve_info import request_info_nodes
 from win32api import GetSystemMetrics
 from tkinter import *
