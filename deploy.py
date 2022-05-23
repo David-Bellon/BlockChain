@@ -155,10 +155,14 @@ class BlockChain():
 
 def deploy():
     blockchain = BlockChain()
+    a = [blockchain, User]
     print("Succesfully deploy")
-    x = threading.Thread(target=listen_to_request_info, args=(blockchain, User))
-    y = threading.Thread(target=listen_to_new_info, args=(blockchain, User))
+    x = threading.Thread(target=listen_to_request_info, args=(a,))
+    y = threading.Thread(target=listen_to_new_info, args=(a,))
     x.start()
     y.start()
+    while True:
+        print(a[0].unconfirmed_transactions)
+        time.sleep(0.3)
 
 deploy()

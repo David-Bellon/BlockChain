@@ -3,7 +3,7 @@ import pickle
 import time
 from settings import PORT_1, PORT_2, A, B, C
 
-def listen_to_request_info(blockchain, user):
+def listen_to_request_info(info):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     s.bind(('0.0.0.0', PORT_1))
@@ -16,10 +16,10 @@ def listen_to_request_info(blockchain, user):
         recieved = c.recv(1024).decode()
         if recieved == A:
             print("Enviando info")
-            data = pickle.dumps(blockchain)
+            data = pickle.dumps(info[0])
             c.send(data)
             time.sleep(1)
-            data = pickle.dumps(user)
+            data = pickle.dumps(info[1])
             c.send(data)
 
         else:
@@ -28,7 +28,7 @@ def listen_to_request_info(blockchain, user):
 
 
 
-def listen_to_new_info(blockchain, user):
+def listen_to_new_info(info):
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -44,15 +44,15 @@ def listen_to_new_info(blockchain, user):
         if recieved == B:
             c.send(C.encode())
 
-            recieved_b = s.recv(4096)
+            recieved_b = c.recv(4096)
             blockchain_data = pickle.loads(recieved_b)
 
-            recieved_u = s.recv(4096)
+            recieved_u = c.recv(4096)
             user_data = pickle.loads(recieved_u)
             print("Recieved new Transactions")
 
-            blockchain = blockchain_data
-            user = user_data
+            info[0] = blockchain_data
+            info[1] = user_data
 
             print("Blockchain Updated")
         else:
