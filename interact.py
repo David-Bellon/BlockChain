@@ -1,4 +1,5 @@
-from listen import send_blockchain_info
+from BlockChain.comunicate import alert_new_transaction
+from listen import listen_to_request_info
 from comunicate import request_info_nodes
 from win32api import GetSystemMetrics
 from tkinter import *
@@ -20,7 +21,7 @@ def blockChainActions():
     canvas = Canvas(master, width= 300, height= 50, bg="gray")
     canvas.place(x = width - 300, y = height * 0.0001)
     
-    server = threading.Thread(target=send_blockchain_info, args=(blockchain, users))
+    server = threading.Thread(target=listen_to_request_info, args=(blockchain, users))
     server.start()
     
     master.mainloop()
@@ -39,8 +40,10 @@ def main():
             else:
                 secret = generateAdress(users.id, paswd_sig.get())
                 blockchain.add_user_transaction(users(secret))
+                alert_new_transaction(blockchain, users)
                 ip = get_ip()
                 blockchain.add_node_transaction(secret, ip)
+                alert_new_transaction(blockchain, users)
         else:
             l = Label(w, text="Password must be more than 6 characters and not empty", bg="gray", fg="white")
             l.place(x= width / 1.57, y= height / 1.6)
