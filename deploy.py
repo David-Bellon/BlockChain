@@ -69,6 +69,7 @@ class BlockChain():
         genesis_block.hash = genesis_block.compute_hash()
         genesis_block.mineDate = time.time()
         self.add_node("0x0", get_ip())
+        self.add_user(User("0x0"))
         self.chain.append(genesis_block)
 
     def last_block(self):
