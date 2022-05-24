@@ -1,6 +1,7 @@
 from hashlib import sha256
 from random import randint
 from settings import get_ip, ROOT
+from comunicate import alert_new_transaction
 import os
 import pandas as pd
 import time
@@ -76,6 +77,7 @@ class BlockChain():
 
     def add_node_transaction(self, adress, ip):
         self.add_new_transaction(self.EventNodeCreated(adress, ip))
+        alert_new_transaction(self, User, self.nodes.values())
 
     def add_node(self, adress, ip):
         self.nodes[adress] = ip
@@ -90,6 +92,7 @@ class BlockChain():
 
     def add_user_transaction(self, user):
         self.add_new_transaction(self.EventUserCreated(user.adress))
+        alert_new_transaction(self, User, self.nodes.values())
 
     def add_user(self, user):
         sem.acquire()
