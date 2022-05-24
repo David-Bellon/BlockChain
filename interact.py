@@ -1,4 +1,3 @@
-from comunicate import alert_new_transaction
 from listen import listen_to_request_info
 from comunicate import request_info_nodes
 from win32api import GetSystemMetrics
@@ -21,7 +20,7 @@ def blockChainActions():
     canvas = Canvas(master, width= 300, height= 50, bg="gray")
     canvas.place(x = width - 300, y = height * 0.0001)
     
-    server = threading.Thread(target=listen_to_request_info, args=(blockchain, users))
+    server = threading.Thread(target=listen_to_request_info, args=(data,))
     server.start()
     
     master.mainloop()
