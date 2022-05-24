@@ -40,10 +40,8 @@ def main():
             else:
                 secret = generateAdress(users.id, paswd_sig.get())
                 blockchain.add_user_transaction(users(secret))
-                alert_new_transaction(blockchain, users)
                 ip = get_ip()
                 blockchain.add_node_transaction(secret, ip)
-                alert_new_transaction(blockchain, users)
         else:
             l = Label(w, text="Password must be more than 6 characters and not empty", bg="gray", fg="white")
             l.place(x= width / 1.57, y= height / 1.6)

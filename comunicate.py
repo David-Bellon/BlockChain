@@ -33,7 +33,7 @@ def request_info_nodes():
         print("Imposible to connect with nodes")
         return False
 
-def alert_new_transaction(blockchain, user):
+def alert_new_transaction(blockchain, user, nodes):
     if nodes != False:
         for i in nodes:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
