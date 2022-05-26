@@ -39,6 +39,10 @@ def blockChainActions(address, current_user):
                 if blo_trans.size() == 0:
                     for i in blockchain.unconfirmed_transactions:
                         blo_trans.insert(0,i)
+                else:
+                    for i, value in enumerate(blo_trans.get(0, END)):
+                        if str(blockchain.unconfirmed_transactions[i]) != value:
+                            blo_trans.insert(0, value)
 
     def vote(option):
         if option.get() != 0:
