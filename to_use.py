@@ -95,9 +95,7 @@ class BlockChain():
         alert_new_transaction(self, User, self.nodes.values())
 
     def add_user(self, user):
-        sem.acquire()
         self.users.append(user)
-        sem.release()
 
     def proof_of_work(self, block):
         block.nonce = 0
@@ -131,7 +129,6 @@ class BlockChain():
         self.unconfirmed_transactions.append(transaction)
 
     def mine(self):
-        sem.acquire()
 
         if not self.unconfirmed_transactions:
             return False
@@ -144,15 +141,14 @@ class BlockChain():
         self.compute_transactions(new_block.transactions)
         self.unconfirmed_transactions = []
         print("Block Mined")
-        sem.release()
         return new_block.index
 
     def compute_transactions(self, transactions):
         for i in transactions:
-            if i == self.EventUserCreated:
+            if type(i) == self.EventUserCreated:
                 self.add_user(i.adress)
-            elif i == self.EventNodeCreated:
+            elif type(i) == self.EventNodeCreated:
                 self.add_node(i.adress, i.ip)
             else:
                 return False
-        alert_new_transaction()
+        alert_new_transaction(self, User, self.nodes.values())

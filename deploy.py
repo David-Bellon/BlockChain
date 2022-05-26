@@ -155,7 +155,7 @@ class BlockChain():
                 self.add_node(i.adress, i.ip)
             else:
                 return False
-        alert_new_transaction()
+        alert_new_transaction(self, User, self.nodes.values())
 
 def deploy():
     blockchain = BlockChain()
