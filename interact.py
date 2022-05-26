@@ -9,7 +9,8 @@ import threading
 
 
 
-def blockChainActions(address):
+def blockChainActions(address, current_user):
+
 
     def expand(event):
         w = event.widget
@@ -40,10 +41,11 @@ def blockChainActions(address):
                         blo_trans.insert(0,i)
 
     def vote(option):
-        
-
+        if current_user.voted == False:
+            blockchain.add_vote_transaction(option, current_user)
+        else:
+            print("User Already Voted")
             
-
     def infinite_mine():
         #while True:
         blockchain.mine()
@@ -100,6 +102,8 @@ def blockChainActions(address):
 
 def main():
 
+    current_user = None
+
     def SignUp():
 
         if paswd_sig.get() != "" and len(paswd_sig.get()) >= 6 and not " " in paswd_sig.get():
@@ -110,7 +114,9 @@ def main():
                 a.after(1000, a.destroy)
             else:
                 secret = generateAdress(users.id, paswd_sig.get())
-                blockchain.add_user_transaction(users(secret))
+                new_user = users(secret)
+                current_user = new_user
+                blockchain.add_user_transaction(new_user)
                 ip = get_ip()
                 blockchain.add_node_transaction(secret, ip)
         else:
@@ -134,7 +140,7 @@ def main():
                     f = open(url, "r")
                     s = f.readlines()[2]
                     f.close()
-                    blockChainActions(s)
+                    blockChainActions(s, current_user)
                 else:
                     b = Label(w, text="Wrong Password")
                     b.place(x=width /2, y = width / 2)

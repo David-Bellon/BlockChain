@@ -86,6 +86,7 @@ class BlockChain():
 
     def add_vote_transaction(self, option, user):
         self.add_new_transaction(self.EventVote(option, user))
+        alert_new_transaction(self, User, self.nodes.values())
 
     def add_vote(self, option, user):
         if option == 1:
