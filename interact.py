@@ -11,7 +11,7 @@ import threading
 
 def blockChainActions(address, current_user):
 
-
+    current_user = current_user[0]
     def expand(event):
         w = event.widget
         try:
@@ -41,10 +41,15 @@ def blockChainActions(address, current_user):
                         blo_trans.insert(0,i)
 
     def vote(option):
-        if current_user.voted == False:
-            blockchain.add_vote_transaction(option, current_user)
+        if option.get() != 0:
+            if current_user.voted == False:
+                blockchain.add_vote_transaction(option.get(), current_user)
+            else:
+                print("User Already Voted")
         else:
-            print("User Already Voted")
+            z = Label(master, text="Elija una opcion")
+            z.place(x = width - 1300, y = height * 0.73)
+            z.after(1300, z.destroy)
             
     def infinite_mine():
         #while True:
@@ -102,8 +107,8 @@ def blockChainActions(address, current_user):
 
 def main():
 
-    current_user = None
-
+    current_user = []
+    
     def SignUp():
 
         if paswd_sig.get() != "" and len(paswd_sig.get()) >= 6 and not " " in paswd_sig.get():
@@ -115,7 +120,7 @@ def main():
             else:
                 secret = generateAdress(users.id, paswd_sig.get())
                 new_user = users(secret)
-                current_user = new_user
+                current_user.append(new_user)
                 blockchain.add_user_transaction(new_user)
                 ip = get_ip()
                 blockchain.add_node_transaction(secret, ip)
