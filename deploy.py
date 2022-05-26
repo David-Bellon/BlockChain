@@ -167,6 +167,8 @@ def deploy():
     y.start()
     while True:
         print(a[0].unconfirmed_transactions)
+        print(x.is_alive())
+        print(y.is_alive())
         time.sleep(0.3)
 
 deploy()
