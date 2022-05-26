@@ -29,6 +29,28 @@ def blockChainActions(address):
 
         l.place(x = width + 30, y = height * 0.1)
 
+    def show_pending_transactions():
+        while True:
+            if len(blockchain.unconfirmed_transactions) == 0:
+                if blo_trans.size() != 0:
+                    blo_trans.delete(0, END)
+            else:
+                if blo_trans.size() == 0:
+                    for i in blockchain.unconfirmed_transactions:
+                        blo_trans.insert(0,i)
+
+            
+
+    def infinite_mine():
+        #while True:
+        blockchain.mine()
+
+    def start_mine():
+        x = threading.Thread(target=infinite_mine)
+        x.start()
+        print("Started Mining")
+
+
     master = Tk()
     width = int(GetSystemMetrics(0) * 0.7)
     height = int(GetSystemMetrics(1) * 0.7)
@@ -44,10 +66,6 @@ def blockChainActions(address):
     text.place(x= width - 465, y= height *0.02)
 
     blo_trans = Listbox(master, width=70,height= 50, yscrollcommand= v.set, xscrollcommand=h.set)
-    
-
-    for i in blockchain.unconfirmed_transactions:
-        blo_trans.insert(0,i)
 
     blo_trans.place(x= width - 470, y = height * 0.1)
 
@@ -56,8 +74,13 @@ def blockChainActions(address):
 
     blo_trans.bind('<<ListboxSelect>>', expand)
     
-    #server = threading.Thread(target=listen_to_request_info, args=(data,))
-    #server.start()
+    trans_gui = threading.Thread(target=show_pending_transactions)
+    trans_gui.start()
+
+    button_mine = Button(master, width= 20, height=8, text="Mine", background="grey", command=start_mine)
+    button_mine.place(x = width - 1000, y = height * 0.1)
+
+
     
     master.mainloop()
 
