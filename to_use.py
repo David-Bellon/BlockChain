@@ -155,3 +155,4 @@ class BlockChain():
                 self.add_node(i.adress, i.ip)
             else:
                 return False
+        alert_new_transaction()
