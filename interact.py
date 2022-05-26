@@ -9,21 +9,58 @@ import threading
 
 
 
-def blockChainActions():
+def blockChainActions(address):
+
+    def expand(event):
+        w = event.widget
+        try:
+            index = int(w.curselection()[0])
+        except:
+            return False
+        transac = w.get(index)
+        
+        for i in blockchain.unconfirmed_transactions:
+            if transac == str(i):
+                l = Listbox(master, width = 100, height= 23)
+                variables = [attr for attr in dir(i) if not callable(getattr(i, attr)) and not attr.startswith("__")]
+                for j in variables:
+                    text = str(j) + ": " + str(getattr(i, j))
+                    l.insert(0, text)
+
+        l.place(x = width + 30, y = height * 0.1)
+
     master = Tk()
     width = int(GetSystemMetrics(0) * 0.7)
     height = int(GetSystemMetrics(1) * 0.7)
+    v = Scrollbar(master)
+    v.pack(side= RIGHT,fill= Y)
+    h = Scrollbar(master, orient="horizontal")
+    h.pack(side = BOTTOM, fill = X)
     resolution = str(width) + "x" + str(height)
     master.geometry(resolution)
 
 
-    canvas = Canvas(master, width= 300, height= 50, bg="gray")
-    canvas.place(x = width - 300, y = height * 0.0001)
+    text = Label(master, text= str(address), font=("Helvetica", 9), background="grey")
+    text.place(x= width - 465, y= height *0.02)
+
+    blo_trans = Listbox(master, width=70,height= 50, yscrollcommand= v.set, xscrollcommand=h.set)
     
-    server = threading.Thread(target=listen_to_request_info, args=(data,))
-    server.start()
+
+    for i in blockchain.unconfirmed_transactions:
+        blo_trans.insert(0,i)
+
+    blo_trans.place(x= width - 470, y = height * 0.1)
+
+    v.config(command=blo_trans.yview)
+    h.config(command=blo_trans.xview)
+
+    blo_trans.bind('<<ListboxSelect>>', expand)
+    
+    #server = threading.Thread(target=listen_to_request_info, args=(data,))
+    #server.start()
     
     master.mainloop()
+
 
 
 def main():
@@ -59,7 +96,10 @@ def main():
                     p.place(x=width /2, y = width / 2)
                     w.destroy()
                     #Abrir otra ventana y acceso a la blockchain
-                    blockChainActions()
+                    f = open(url, "r")
+                    s = f.readlines()[2]
+                    f.close()
+                    blockChainActions(s)
                 else:
                     b = Label(w, text="Wrong Password")
                     b.place(x=width /2, y = width / 2)
