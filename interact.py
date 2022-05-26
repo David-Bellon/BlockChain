@@ -40,9 +40,10 @@ def blockChainActions(address, current_user):
                     for i in blockchain.unconfirmed_transactions:
                         blo_trans.insert(0,i)
                 else:
-                    for i, value in enumerate(blo_trans.get(0, END)):
-                        if str(blockchain.unconfirmed_transactions[i]) != value:
-                            blo_trans.insert(0, value)
+                    for i in blockchain.unconfirmed_transactions:
+                        if str(i) not in blo_trans.get(0, END):
+                            blo_trans.insert(0,i)
+
 
     def vote(option):
         if option.get() != 0:
@@ -56,7 +57,7 @@ def blockChainActions(address, current_user):
             z.after(1300, z.destroy)
             
     def infinite_mine():
-        #while True:
+        #while True:5
         blockchain.mine()
 
     def start_mine():
