@@ -86,6 +86,7 @@ class BlockChain():
 
     def add_vote_transaction(self, option, user):
         self.add_new_transaction(self.EventVote(option, user))
+        user.voted = True
         alert_new_transaction(self, User, self.nodes.values())
 
     def add_vote(self, option, user):
@@ -98,7 +99,6 @@ class BlockChain():
         elif option == 4:
             self.votes["Partido D"] += 1
         
-        user.voted = True
 
     def add_node_transaction(self, adress, ip):
         self.add_new_transaction(self.EventNodeCreated(adress, ip))
