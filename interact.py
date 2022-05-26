@@ -39,6 +39,9 @@ def blockChainActions(address):
                     for i in blockchain.unconfirmed_transactions:
                         blo_trans.insert(0,i)
 
+    def vote(option):
+        
+
             
 
     def infinite_mine():
@@ -61,7 +64,7 @@ def blockChainActions(address):
     resolution = str(width) + "x" + str(height)
     master.geometry(resolution)
 
-
+    #Show all the pending transactions in a list
     text = Label(master, text= str(address), font=("Helvetica", 9), background="grey")
     text.place(x= width - 465, y= height *0.02)
 
@@ -74,12 +77,21 @@ def blockChainActions(address):
 
     blo_trans.bind('<<ListboxSelect>>', expand)
     
-    trans_gui = threading.Thread(target=show_pending_transactions)
+    trans_gui = threading.Thread(target=show_pending_transactions, daemon=True)
     trans_gui.start()
 
-    button_mine = Button(master, width= 20, height=8, text="Mine", background="grey", command=start_mine)
+    #Button for mine but just one not infinite.
+    button_mine = Button(master, width= 20, height=8, text="Mine", background="grey", command=start_mine, borderwidth=5)
     button_mine.place(x = width - 1000, y = height * 0.1)
 
+    #Options to vote and cast transaction
+    Canvas(master, bg="grey", width= 150, height= 400).place(x= width - 1285, y = height * 0.13)
+    option = IntVar()
+    Radiobutton(master, text="Partido A", variable= option, value=1, bg="grey").place(x = width - 1250, y = height * 0.2)
+    Radiobutton(master, text="Partido B", variable= option, value=2, bg="grey").place(x = width - 1250, y = height * 0.32)
+    Radiobutton(master, text="Partido C", variable= option, value=3, bg="grey").place(x = width - 1250, y = height * 0.44)
+    Radiobutton(master, text="Partido D", variable= option, value=4, bg="grey").place(x = width - 1250, y = height * 0.56)
+    Button(master, width= 10, text="Vote",command = lambda: vote(option)).place(x = width - 1247, y = height * 0.68)
 
     
     master.mainloop()

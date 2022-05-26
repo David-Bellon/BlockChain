@@ -65,6 +65,12 @@ class BlockChain():
         self.nodes = {
             }
         self.users = []
+        self.votes = {
+            "Partido A": 0,
+            "Partido B": 0,
+            "Partido C": 0,
+            "Partido D": 0,
+        }
         genesis_block = Block(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         genesis_block.mineDate = time.time()
