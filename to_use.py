@@ -13,12 +13,12 @@ sem = threading.Semaphore()
 
 
 class User():
-    id = 0
-    def __init__(self, adress):
-        self.count = User.id
-        self.adress = adress
-        self.voted = False
-        User.id +=1
+        id = 0
+        def __init__(self, adress):
+            self.count = User.id
+            self.adress = adress
+            self.voted = False
+            User.id +=1
 
 
 class Block:
@@ -48,11 +48,13 @@ class BlockChain():
             self.ip = ip
 
     class EventVote():
-        pass
+        def __init__(self, option, user):
+            self.user = user
+            self.option = option
+            
 
     difficulty = 3
     
-
     
     def __init__(self):
 
@@ -81,6 +83,22 @@ class BlockChain():
     def last_block(self):
         return self.chain[-1]
 
+
+    def add_vote_transaction(self, option, user):
+        self.add_new_transaction(self.EventVote(option, user))
+
+    def add_vote(self, option, user):
+        if option == 1:
+            self.votes["Partido A"] +=1
+        elif option == 2:
+            self.votes["Partido B"] += 1
+        elif option == 3:
+            self.votes["Partido C"] += 1
+        elif option == 4:
+            self.votes["Partido D"] += 1
+        
+        user.voted = True
+
     def add_node_transaction(self, adress, ip):
         self.add_new_transaction(self.EventNodeCreated(adress, ip))
         alert_new_transaction(self, User, self.nodes.values())
@@ -101,7 +119,9 @@ class BlockChain():
         alert_new_transaction(self, User, self.nodes.values())
 
     def add_user(self, user):
+        sem.acquire()
         self.users.append(user)
+        sem.release()
 
     def proof_of_work(self, block):
         block.nonce = 0
@@ -135,6 +155,7 @@ class BlockChain():
         self.unconfirmed_transactions.append(transaction)
 
     def mine(self):
+        sem.acquire()
 
         if not self.unconfirmed_transactions:
             return False
@@ -144,9 +165,10 @@ class BlockChain():
         new_block = Block(index=last_block.index + 1, transactions=self.unconfirmed_transactions, timestamp=time.time(), previous_hash=last_block.hash)
         proof = self.proof_of_work(new_block)
         self.add_block(new_block, proof)
-        self.unconfirmed_transactions = []
         self.compute_transactions(new_block.transactions)
+        self.unconfirmed_transactions = []
         print("Block Mined")
+        sem.release()
         return new_block.index
 
     def compute_transactions(self, transactions):
@@ -155,6 +177,8 @@ class BlockChain():
                 self.add_user(i.adress)
             elif type(i) == self.EventNodeCreated:
                 self.add_node(i.adress, i.ip)
+            elif type(i) == self.EventVote:
+                self.add_vote(i.option)
             else:
                 return False
         alert_new_transaction(self, User, self.nodes.values())

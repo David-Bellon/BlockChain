@@ -48,11 +48,13 @@ class BlockChain():
             self.ip = ip
 
     class EventVote():
-        pass
+        def __init__(self, option, user):
+            self.user = user
+            self.option = option
+            
 
     difficulty = 3
     
-
     
     def __init__(self):
 
@@ -80,6 +82,22 @@ class BlockChain():
 
     def last_block(self):
         return self.chain[-1]
+
+
+    def add_vote_transaction(self, option, user):
+        self.add_new_transaction(self.EventVote(option, user))
+
+    def add_vote(self, option, user):
+        if option == 1:
+            self.votes["Partido A"] +=1
+        elif option == 2:
+            self.votes["Partido B"] += 1
+        elif option == 3:
+            self.votes["Partido C"] += 1
+        elif option == 4:
+            self.votes["Partido D"] += 1
+        
+        user.voted = True
 
     def add_node_transaction(self, adress, ip):
         self.add_new_transaction(self.EventNodeCreated(adress, ip))
@@ -155,10 +173,12 @@ class BlockChain():
 
     def compute_transactions(self, transactions):
         for i in transactions:
-            if i == self.EventUserCreated:
+            if type(i) == self.EventUserCreated:
                 self.add_user(i.adress)
-            elif i == self.EventNodeCreated:
+            elif type(i) == self.EventNodeCreated:
                 self.add_node(i.adress, i.ip)
+            elif type(i) == self.EventVote:
+                self.add_vote(i.option)
             else:
                 return False
         alert_new_transaction(self, User, self.nodes.values())
