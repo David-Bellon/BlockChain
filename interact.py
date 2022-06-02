@@ -105,6 +105,8 @@ def blockChainActions(address, current_user):
     Radiobutton(master, text="Partido D", variable= option, value=4, bg="grey").place(x = width - 1250, y = height * 0.56)
     Button(master, width= 10, text="Vote",command = lambda: vote(option)).place(x = width - 1247, y = height * 0.68)
 
+    y = threading.Thread(target=listen_to_request_info, daemon=True)
+    y.start()
     
     master.mainloop()
 
